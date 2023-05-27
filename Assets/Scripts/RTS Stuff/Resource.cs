@@ -4,49 +4,70 @@ using UnityEngine;
 
 public class Resource : Selectable
 {
-    public Resources resourceType;
+    [SerializeField]
+    private GameObject  abundant,
+                        depleted;
 
     [SerializeField]
-    private uint    amount = 1000,
-                    limit = 2000,
-                    regeneration = 60;
-
-    [SerializeField]
-    private bool destroyResourceAtZero = true;
-
-    public HexTile location;
+    private uint amount = 1000;//,
+//                    limit = 2000,
+  //                  regeneration = 60;
 
     protected override void Awake()
     {
         base.Awake();
-
-        if (regeneration > 0)
-            StartCoroutine(Regenerate());
+        Deplete(amount == 0);
     }
-    private IEnumerator Regenerate()
+
+    private void Deplete(bool isDepleted)
     {
-        while(true)
-        {
-            yield return new WaitForSeconds(regeneration);
-
-            if(amount < limit)
-                ++amount;
-        }
+        abundant.SetActive(!isDepleted);
+        depleted.SetActive(isDepleted);
     }
-    public int Extract()
+
+    public bool HasMore()
+    {
+        return amount > 0;
+    }
+    public int Gather()
     {
         if (amount == 0)
             return 0;
 
         --amount;
-
-        if(amount == 0 && destroyResourceAtZero)
-            Destroy(gameObject, 0.1f);
-
         return 1;
     }
-/*    public override Action[] GetActions()
-    {
-        return new Action[0];
-    }*/
+
+    //    [SerializeField]
+    //  private bool destroyResourceAtZero = true;
+
+    /*    protected override void Awake()
+        {
+            base.Awake();
+
+            if (regeneration > 0)
+                StartCoroutine(Regenerate());
+        }
+        private IEnumerator Regenerate()
+        {
+            while(true)
+            {
+                yield return new WaitForSeconds(regeneration);
+
+                if(amount < limit)
+                    ++amount;
+            }
+        }
+        public int Extract()
+        {
+            if (amount == 0)
+                return 0;
+
+            --amount;
+
+    //        if(amount == 0 && destroyResourceAtZero)
+      //          Destroy(gameObject, 0.1f);
+
+            return 1;
+        }*/
 }

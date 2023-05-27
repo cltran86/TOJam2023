@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class UnitManager : Singleton<UnitManager>
 {
-
+    private int unitCount;
 }

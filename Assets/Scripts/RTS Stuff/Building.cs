@@ -18,7 +18,11 @@ public class Building : Selectable
     [SerializeField]
     private GameObject  underConstruction,
                         built,
+                        decorated,
                         damaged;
+
+    [SerializeField]
+    public List<Jobs> skillsToTrainHere;
 
     public void Initialize()
     {
@@ -26,6 +30,7 @@ public class Building : Selectable
         underConstruction.SetActive(true);
         built.SetActive(false);
         damaged.SetActive(false);
+        BuildingManager.Instance.AddConstructedBuilding(this);
     }
 
     public override void Select(bool select)

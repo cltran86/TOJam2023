@@ -8,6 +8,9 @@ public class BuildingManager : Singleton<BuildingManager>
     private InputManager input;
 
     [SerializeField]
+    private List<Building> constructed;
+
+    [SerializeField]
     private List<Building> buildings;
 
     [SerializeField]
@@ -24,6 +27,31 @@ public class BuildingManager : Singleton<BuildingManager>
         resources = ResourceManager.Instance;
         input = InputManager.Instance;
     }
+
+    public Building FindNearestBuildingToMe(Villager villager)
+    {
+        if (constructed.Count == 0)
+            return null;
+
+        //  WRITE THIS SOMEHOW???
+
+        return constructed[0];
+    }
+
+    public Building FindNearestBuildingToMe(Villager villager, Jobs canTrain)
+    {
+        if (constructed.Count == 0)
+            return null;
+
+        //  WRITE THIS SOMEHOW???
+
+        foreach(Building built in constructed)
+            if (built.skillsToTrainHere.Contains(canTrain))
+                return built;
+
+        return null;
+    }
+
     public void OpenBuildMenu(bool open)
     {
         if(!open)
@@ -37,14 +65,19 @@ public class BuildingManager : Singleton<BuildingManager>
         buildPanel.SetActive(true);
     }
 
+    public void AddConstructedBuilding(Building built)
+    {
+        constructed.Add(built);
+    }
+/*
     public void Build(Building toBuild)
     {
-        if (resources.RequestResources(new int[] { toBuild.cost }))
+        if (resources.RequestResources(toBuild.cost))
         {
             input.SelectBuildingSite(toBuild);
             buildPanel.SetActive(false);
         }
         else
             print("Insufficient funds to build this building");
-    }
+    }*/
 }

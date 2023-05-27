@@ -20,20 +20,18 @@ public class Details : Singleton<Details>
     private Text    primaryGaugeText,
                     secondaryGaugeText;
 
-    [SerializeField]
-    private Button  buildButton;
+//    [SerializeField]
+  //  private Transform actionButtonsContentFolder;
+    //[SerializeField]
+    //private ActionButton actionButtonPrefab;
 
     [SerializeField]
-    private Transform actionButtonsContentFolder;
-    [SerializeField]
-    private ActionButton actionButtonPrefab;
-    [SerializeField]
-    private List<ActionButton> actionButtons;
+    private List<Button> actionButtons;
 
-    [SerializeField]
-    private GameObject actionQueue;
-    [SerializeField]
-    private List<ActionQueueButton> actionQueueButtons;
+//    [SerializeField]
+  //  private GameObject actionQueue;
+    //[SerializeField]
+   // private List<ActionQueueButton> actionQueueButtons;
 
     private Selectable selected;
 
@@ -75,28 +73,46 @@ public class Details : Singleton<Details>
 
     public void UpdateActionButtons()
     {
+        foreach (Button button in actionButtons)
+            button.gameObject.SetActive(false);
+
         Villager villager = selected.GetComponent<Villager>();
-        buildButton.gameObject.SetActive(villager && villager.CanBuild());
+
+        if(villager)
+        {
+            actionButtons[0].gameObject.SetActive(villager.CanBuild());
+
+            List<Jobs> options = villager.TrainingOptions();
+
+            foreach(Jobs option in options)
+                actionButtons[(int)option].gameObject.SetActive(true);
+        }
 
 
-/*        //  Figure out what action this selectable needs buttons for...
-        Action[] actions = selected.GetActions();
+        /*        //  Figure out what action this selectable needs buttons for...
+                Action[] actions = selected.GetActions();
 
-        //  Do I already have enough action buttons?  If not make some more!
-        if (actions.Length > actionButtons.Count)
-            for (int i = actionButtons.Count; i != actions.Length; ++i)
-                actionButtons.Add(Instantiate(actionButtonPrefab, actionButtonsContentFolder));
+                //  Do I already have enough action buttons?  If not make some more!
+                if (actions.Length > actionButtons.Count)
+                    for (int i = actionButtons.Count; i != actions.Length; ++i)
+                        actionButtons.Add(Instantiate(actionButtonPrefab, actionButtonsContentFolder));
 
-        //  iterate through action buttons and assign their functions, disable extra buttons
-        for (int i = 0; i != actionButtons.Count; ++i)
-            if (i < actions.Length)
-            {
-                actionButtons[i].PopulateButton(selected, actions[i]);
-                actionButtons[i].gameObject.SetActive(true);
-            }
-            else
-                actionButtons[i].gameObject.SetActive(false);*/
+                //  iterate through action buttons and assign their functions, disable extra buttons
+                for (int i = 0; i != actionButtons.Count; ++i)
+                    if (i < actions.Length)
+                    {
+                        actionButtons[i].PopulateButton(selected, actions[i]);
+                        actionButtons[i].gameObject.SetActive(true);
+                    }
+                    else
+                        actionButtons[i].gameObject.SetActive(false);*/
     }
+
+    public void TrainButtonPressed(int jobIndex)
+    {
+        StartCoroutine(selected.GetComponent<Villager>().TrainNewJob((Jobs) jobIndex));
+    }
+
     public void UpdateActionQueue()
     {
 /*        //  Action queueing is only for buildings

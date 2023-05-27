@@ -311,7 +311,7 @@ public class InputManager : Singleton<InputManager>
                     foreach (Selectable selected in this.selected)
                     {
                         unit = selected.GetComponent<Unit>();
-                        unit.NavigateTo(hit.point);
+                        StartCoroutine(unit.NavigateTo(hit.point));
                     }
                 }
             }
@@ -326,10 +326,8 @@ public class InputManager : Singleton<InputManager>
                 {
                     villager = selectable.GetComponent<Villager>();
 
-//                    if(villager)
-  //                      StartCoroutine(villager.GatherResources(resource));
-
-                    //  other units should probably just move towards it?
+                    if(villager)
+                        StartCoroutine(villager.GatherResources(resource));
                 }
             }
         }

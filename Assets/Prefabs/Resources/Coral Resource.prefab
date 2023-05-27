@@ -1605,12 +1605,11 @@ MonoBehaviour:
 '
   selectionReticle: {fileID: 7857801463432398509}
   actions: []
-  resourceType: 0
+  abundant: {fileID: 422260808621930351}
+  depleted: {fileID: 1158937572579600495}
   amount: 1000
   limit: 2000
   regeneration: 60
-  destroyResourceAtZero: 1
-  location: {fileID: 0}
 --- !u!135 &5001904484183094014
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1848,7 +1847,7 @@ Transform:
   m_GameObject: {fileID: 7857801463432398509}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.06, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 10, y: 10, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6511903526696822798}

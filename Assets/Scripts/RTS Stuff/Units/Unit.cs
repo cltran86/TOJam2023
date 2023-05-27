@@ -38,12 +38,14 @@ public class Unit : Selectable
     {
         this.targetPosition = targetPosition;
         StopCoroutine(moving);
+        moving = Moving();
         yield return StartCoroutine(moving);
     }
     public IEnumerator NavigateTo(Selectable target)
     {
-        targetPosition = target.transform.position;
+        this.targetPosition = target.transform.position;
         StopCoroutine(moving);
+        moving = Moving();
         yield return StartCoroutine(moving);
     }
 

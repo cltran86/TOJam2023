@@ -28,11 +28,11 @@ Transform:
   m_GameObject: {fileID: 103220269}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.06, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 10, y: 10, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8865110993666643955}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!33 &103220273
 MeshFilter:
@@ -295,7 +295,38 @@ Transform:
   m_Children:
   - {fileID: 400059777}
   m_Father: {fileID: 8865110993666643955}
-  m_RootOrder: 4
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &601357961374417203
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1065843520458735339}
+  m_Layer: 0
+  m_Name: Decorations
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1065843520458735339
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 601357961374417203}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8865110993666643955}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1260115639443408047
 GameObject:
@@ -411,7 +442,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5220892554148779127
 Transform:
   m_ObjectHideFlags: 0
@@ -511,6 +542,7 @@ Transform:
   m_Children:
   - {fileID: 5220892554148779127}
   - {fileID: 2776563455868275203}
+  - {fileID: 1065843520458735339}
   - {fileID: 1227941427755733188}
   - {fileID: 103220270}
   - {fileID: 667255840}
@@ -588,7 +620,9 @@ MonoBehaviour:
   cost: 0
   underConstruction: {fileID: 2825028490139541029}
   built: {fileID: 7401929972426194009}
+  decorated: {fileID: 0}
   damaged: {fileID: 8853423686598919640}
+  skillsToTrainHere: 01000000
 --- !u!1 &7401929972426194009
 GameObject:
   m_ObjectHideFlags: 0
@@ -604,7 +638,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2776563455868275203
 Transform:
   m_ObjectHideFlags: 0
@@ -735,7 +769,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1227941427755733188
 Transform:
   m_ObjectHideFlags: 0
@@ -749,7 +783,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8865110993666643955}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &9158689677604144994
 GameObject:

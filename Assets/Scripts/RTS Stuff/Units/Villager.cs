@@ -13,10 +13,29 @@ public enum Skills
     shield
 }
 
+public enum Jobs
+{
+    Villager,
+    Builder,
+    Artist,
+    Healer,
+    Fighter,
+    Archer,
+    Shield
+}
+
 public class Villager : Unit
 {
     [SerializeField]
-    protected float gatherSpeed = 1;
+    private Jobs mainJob, subJob;
+
+    [SerializeField]
+    private GameObject[] jobEquipment;
+
+    [SerializeField]
+    protected float gatherSpeed = 1,
+                    learnSpeed = 1;
+
     [SerializeField]
     protected int   gathered,
                     capacity = 10;
@@ -25,46 +44,111 @@ public class Villager : Unit
     [SerializeField]
     private bool[] skills;
 
-    public bool CanBuild()
-    {
-        return skills[0];
-    }
+    private IEnumerator currentOrders;
 
     public IEnumerator GatherResources(Resource toGather)
     {
+        if(currentOrders != null)
+            StopCoroutine(currentOrders);
+        currentOrders = GatherResources(toGather);
+
         while (true)
         {
-            animator.SetBool("Swimming", true);
+            yield return StartCoroutine(NavigateTo(toGather));
 
-            //        yield return StartCoroutine(NavigateTo(toGather));
-
-            animator.SetBool("Swimming", false);
             animator.SetBool("Gathering", true);
 
-            while (gathered != capacity)
+            while (toGather.HasMore() && gathered < capacity)
             {
                 yield return new WaitForSeconds(1 / gatherSpeed);
-                ++gathered;
+                gathered += toGather.Gather();
             }
             animator.SetBool("Gathering", false);
-            animator.SetBool("Swimming", true);
 
-            //        yield return StartCoroutine(NavigateTo(BuildingManager.Instance.FindNearestBuildingToMe(this)));
+            Building toDeliverTo = BuildingManager.Instance.FindNearestBuildingToMe(this);
 
-            //            ResourceManager.Instance.AddResource(gathered);
+            yield return StartCoroutine(NavigateTo(toDeliverTo));
+
+            ResourceManager.Instance.AddResource(0, gathered);
             gathered = 0;
         }
     }
 
-    public void LearnSkill(int toLearn)
+    public List<Jobs> TrainingOptions()
     {
-        //  Find the nearest building that teaches this skill
-        //  navigate to the building
-        //  train...
+        List<Jobs> options = new List<Jobs>();
 
-        skills[toLearn] = true;
+        if(mainJob == Jobs.Villager)
+        {
+            options.Add(Jobs.Builder);
+            options.Add(Jobs.Fighter);
+        }
+        else if(mainJob == Jobs.Builder)
+        {
+            options.Add(Jobs.Artist);
+            options.Add(Jobs.Healer);
+        }
+        else if(mainJob == Jobs.Fighter)
+        {
+            options.Add(Jobs.Archer);
+            options.Add(Jobs.Shield);
+        }
 
-        //  need to instantiate a new villager with the appropriate model and animations?
+        //  Add more for subjob stuff later
+
+        return options;
+    }
+
+    public IEnumerator TrainNewJob(Jobs toTrain)
+    {
+        if (currentOrders != null)
+            StopCoroutine(currentOrders);
+        currentOrders = TrainNewJob(toTrain);
+
+        Building facility = BuildingManager.Instance.FindNearestBuildingToMe(this, toTrain);
+
+        if(facility == null)
+        {
+            print("There are no buildings which can train this job.");
+            yield break;
+        }
+        yield return StartCoroutine(NavigateTo(facility));
+
+        int learnedAmount = 0,
+            quota = KnowledgeManager.Instance.learnQuotas[ (int) toTrain ];
+
+        do
+        {
+            if(selected)
+                details.UpdateSecondaryGauge(learnedAmount, quota);
+
+            yield return new WaitForSeconds(1f / learnSpeed);
+        }
+        while (++learnedAmount != quota);
+
+        ChangeMainJob(toTrain);
+
+        if(selected)
+            details.ShowDetails(this);
+
+        yield return StartCoroutine(NavigateTo(facility.transform.position + Vector3.back * 10));
+    }
+
+    public void ChangeMainJob(Jobs toChangeTo)
+    {
+        for (int i = 0; i != jobEquipment.Length; ++i)
+            jobEquipment[i].SetActive(i == (int) toChangeTo);
+
+        skills[(int)toChangeTo] = true;
+        gameObject.name = toChangeTo.ToString();
+        mainJob = toChangeTo;
+    }
+
+    //  BUILDER FUNCTIONS
+
+    public bool CanBuild()
+    {
+        return skills[0];
     }
 
     public void OpenBuildMenu()
@@ -76,6 +160,10 @@ public class Villager : Unit
     {
         if (!skills[(int)Skills.build])
             yield break;
+
+        if (currentOrders != null)
+            StopCoroutine(currentOrders);
+        currentOrders = Build(toBuild);
 
         yield return StartCoroutine(NavigateTo(toBuild));
 
