@@ -25,6 +25,11 @@ public class Villager : Unit
     [SerializeField]
     private bool[] skills;
 
+    public bool CanBuild()
+    {
+        return skills[0];
+    }
+
     public IEnumerator GatherResources(Resource toGather)
     {
         while (true)
@@ -62,17 +67,29 @@ public class Villager : Unit
         //  need to instantiate a new villager with the appropriate model and animations?
     }
 
-
-
     public void OpenBuildMenu()
     {
-        BuildingManager.Instance.OpenBuildMenu();
+        BuildingManager.Instance.OpenBuildMenu(true);
     }
 
-    public void Build(Building toBuild)
+    public IEnumerator Build(Building toBuild)
     {
         if (!skills[(int)Skills.build])
-            return;
+            yield break;
+
+        yield return StartCoroutine(NavigateTo(toBuild));
+
+        animator.SetBool("Building", true);
+        do
+        {
+            yield return new WaitForSeconds(1f / buildSpeed);
+        }
+        while (toBuild.Construct());
+
+        animator.SetBool("Building", false);
+
+        //  Move outside of the building???
+        StartCoroutine(NavigateTo(toBuild.transform.position + Vector3.back * 10));
     }
 
     public void Heal(Unit patient)

@@ -24,8 +24,13 @@ public class BuildingManager : Singleton<BuildingManager>
         resources = ResourceManager.Instance;
         input = InputManager.Instance;
     }
-    public void OpenBuildMenu()
+    public void OpenBuildMenu(bool open)
     {
+        if(!open)
+        {
+            buildPanel.SetActive(false);
+            return;
+        }
         //  update which buttons are presented, based on which buildings are unlocked
         //  make buttons uninteractable if the player doesn't have enough resources
         //  make buttons display the correct information
@@ -34,7 +39,7 @@ public class BuildingManager : Singleton<BuildingManager>
 
     public void Build(Building toBuild)
     {
-        if (resources.RequestResources(toBuild.cost))
+        if (resources.RequestResources(new int[] { toBuild.cost }))
         {
             input.SelectBuildingSite(toBuild);
             buildPanel.SetActive(false);

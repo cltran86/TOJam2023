@@ -4,6 +4,8 @@ using UnityEngine;
 
 public abstract class Selectable : MonoBehaviour
 {
+    protected Animator animator;
+
     protected ResourceManager resources;
     protected Details details;
     protected InputManager input;
@@ -20,6 +22,10 @@ public abstract class Selectable : MonoBehaviour
     [SerializeField]
     protected Action[] actions;
 
+    protected virtual void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
     protected virtual void Start()
     {
         resources = ResourceManager.Instance;
@@ -32,13 +38,13 @@ public abstract class Selectable : MonoBehaviour
         selected = select;
         selectionReticle.SetActive(select);
     }
-
+/*
     public virtual bool QueueAction(Action toQueue)
     {
         return false;
     }
-
-    public abstract Action[] GetActions();
+*/
+    //public abstract Action[] GetActions();
 
     //    protected abstract void GetPrimaryGaugeValue();
     //  protected abstract void GetSecondaryGaugeValue();

@@ -53,6 +53,6 @@ public class ActionButton : MonoBehaviour
 
     public void OnClick()
     {
-        actor.QueueAction(action);
+        //actor.QueueAction(action);
     }
 }

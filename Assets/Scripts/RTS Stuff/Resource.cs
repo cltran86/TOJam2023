@@ -16,8 +16,10 @@ public class Resource : Selectable
 
     public HexTile location;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         if (regeneration > 0)
             StartCoroutine(Regenerate());
     }
@@ -43,8 +45,8 @@ public class Resource : Selectable
 
         return 1;
     }
-    public override Action[] GetActions()
+/*    public override Action[] GetActions()
     {
         return new Action[0];
-    }
+    }*/
 }

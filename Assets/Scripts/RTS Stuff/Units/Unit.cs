@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Unit : Selectable
 {
-    protected Animator animator;
-
     [SerializeField]
     protected float moveSpeed = 1;
 
@@ -26,27 +24,27 @@ public class Unit : Selectable
                         targetPosition;
 
     protected float distanceMoved;
-    protected bool moving;
+//    protected bool moving;
 
-    private void Awake()
+    private IEnumerator moving;
+
+    protected override void Awake()
     {
         animator = GetComponent<Animator>();
+        moving = Moving();
     }
 
-    public void MoveToPosition(Vector3 targetPosition)
+    public IEnumerator NavigateTo(Vector3 targetPosition)
     {
         this.targetPosition = targetPosition;
-
-        if (!moving)
-            StartCoroutine(Moving());
+        StopCoroutine(moving);
+        yield return StartCoroutine(moving);
     }
-
-    public IEnumerator MoveToTile(HexTile toMoveTo)
+    public IEnumerator NavigateTo(Selectable target)
     {
-//        StopAllCoroutines();
-        targetPosition = toMoveTo.transform.position;
-        transform.LookAt(toMoveTo.transform, Vector3.up);
-        yield return StartCoroutine(Moving());
+        targetPosition = target.transform.position;
+        StopCoroutine(moving);
+        yield return StartCoroutine(moving);
     }
 
     protected IEnumerator Moving()
@@ -66,7 +64,7 @@ public class Unit : Selectable
 
     //  Not sure if I still need these
 
-    public override Action[] GetActions()
+/*    public override Action[] GetActions()
     {
         return actions;
     }
@@ -74,5 +72,5 @@ public class Unit : Selectable
     {
         toQueue.whatHappens.Invoke();
         return true;
-    }
+    }*/
 }

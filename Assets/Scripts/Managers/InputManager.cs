@@ -156,8 +156,7 @@ public class InputManager : Singleton<InputManager>
         if (mode == InputMode.Build)
         {
             preview.transform.position = tile.transform.position;
-            preview.site = tile;
-            ValidatePreview(preview.canBeBuiltOn.Contains(tile.terrainType) && tile.builtHere == null && tile.resource == null);
+            //ValidatePreview(preview.canBeBuiltOn.Contains(tile.terrainType) && tile.builtHere == null && tile.resource == null);
         }
         // if input mode is command, then display a move icon?
     }
@@ -203,7 +202,7 @@ public class InputManager : Singleton<InputManager>
         else if(mode == InputMode.Build)
         {
             if (isValid)
-                ConfirmBuildingSite(preview.site);
+                ConfirmBuildingSite();
             else
                 print("Can't build that here, bro!");
         }
@@ -286,6 +285,8 @@ public class InputManager : Singleton<InputManager>
         //  Cancel build mode
         if(mode == InputMode.Build)
         {
+            Destroy(preview.gameObject);
+            buildingManager.OpenBuildMenu(false);
             mode = InputMode.Select;
             return;
         }
@@ -310,8 +311,7 @@ public class InputManager : Singleton<InputManager>
                     foreach (Selectable selected in this.selected)
                     {
                         unit = selected.GetComponent<Unit>();
-                        unit.MoveToPosition(hit.point);
-
+                        unit.NavigateTo(hit.point);
                     }
                 }
             }
@@ -384,24 +384,26 @@ public class InputManager : Singleton<InputManager>
     {
         this.toBeBuilt = toBeBuilt;
         preview = Instantiate(toBeBuilt, buildingManager.transform);
+        preview.SetAsPreview();
         ValidatePreview(isValid = false);
         mode = InputMode.Build;
         EventSystem.current.SetSelectedGameObject(preview.gameObject);
     }
-    private void ValidatePreview(bool isValid)
+    public void ValidatePreview(bool isValid)
     {
         this.isValid = isValid;
 
         foreach (MeshRenderer renderer in preview.GetComponentsInChildren<MeshRenderer>())
             renderer.material = isValid ? valid : invalid;
     }
-    public void ConfirmBuildingSite(HexTile buildingSite)
+    public void ConfirmBuildingSite()
     {
-        Building beingBuilt = Instantiate(toBeBuilt, preview.site.transform.position, Quaternion.identity, buildingManager.transform);
+        Building beingBuilt = Instantiate(toBeBuilt, preview.transform.position, Quaternion.identity, buildingManager.transform);
+        beingBuilt.Initialize();
         Destroy(preview.gameObject);
 
         foreach(Villager villager in GetSelectedBuilders())
-            villager.Build(beingBuilt);
+            StartCoroutine(villager.Build(beingBuilt));
 
         mode = InputMode.Select;
     }
@@ -415,7 +417,7 @@ public class InputManager : Singleton<InputManager>
         {
             villager = selectable.GetComponent<Villager>();
 
-            if (villager != null /* && villager can build */)
+            if (villager != null && villager.CanBuild())
                 villagers.Add(villager);
         }
         return villagers;

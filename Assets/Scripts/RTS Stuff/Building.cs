@@ -5,134 +5,174 @@ using UnityEngine.UI;
 
 public class Building : Selectable
 {
-    public HexTile site;
+    [SerializeField]
+    private int buildQuota;
+    private int buildProgress;
 
     [SerializeField]
-    protected int   productivity,
-                    productivityCostToBuild,
-                    productivitySpent;
+    public int cost;
+
+    private bool isPreview;
+    private List<GameObject> obstacles;
 
     [SerializeField]
-    protected bool holdsResources;
+    private GameObject  underConstruction,
+                        built,
+                        damaged;
 
-    [SerializeField]
-    protected uint actionQueueLimit;
-    protected List<Action> actionQueue;
-    protected Action currentAction;
-    protected bool busy;
-
-    private bool interruptCurrentAction;
-
-    [SerializeField]
-    private GameObject rallyPoint;
-
-    [SerializeField]
-    public List<TerrainType> canBeBuiltOn;
-
-    [SerializeField]
-    public int[] cost;
-
-    private void Awake()
+    public void Initialize()
     {
-        actionQueue = new List<Action>();
+        buildProgress = 0;
+        underConstruction.SetActive(true);
+        built.SetActive(false);
+        damaged.SetActive(false);
     }
 
     public override void Select(bool select)
     {
         base.Select(select);
-        rallyPoint.SetActive(select);
+
+        if(selected)
+            details.UpdateSecondaryGauge(buildProgress, buildQuota);
     }
 
+    public void SetAsPreview()
+    {
+        isPreview = true;
+        obstacles = new List<GameObject>();
+    }
+    
     public bool Construct()
     {
-        if (++productivitySpent == productivityCostToBuild)
-            return true;
-        else
+        ++buildProgress;
+
+        if (selected)
+            details.UpdateSecondaryGauge(buildProgress, buildQuota);
+
+        if (buildProgress >= buildQuota)
+        {
+            ConstructionComplete();
             return false;
+        }
+        else
+            return true;
     }
 
-    public override Action[] GetActions()
+    private void ConstructionComplete()
     {
-        return actions;
+        //  change model
+        underConstruction.SetActive(false);
+        built.SetActive(true);
+        damaged.SetActive(false);
+
+        //  poof
+        //  etc
     }
-    public List<Action> GetQueuedActions()
+
+    private void OnTriggerEnter(Collider collision)
     {
-        return actionQueue;
+        if (!isPreview)
+            return;
+
+        if (collision.GetComponent<Building>() || collision.GetComponent<Resource>())
+            obstacles.Add(collision.gameObject);
+
+        input.ValidatePreview(obstacles.Count == 0);
     }
-    private IEnumerator PerformQueuedActions()
+
+    private void OnTriggerExit(Collider collision)
     {
-        busy = true;
-        do
+        if (!isPreview)
+            return;
+
+        //        if (obstacles.Contains(collision.gameObject))
+        obstacles.Remove(collision.gameObject);
+
+        input.ValidatePreview(obstacles.Count == 0);
+    }
+
+    /*    public override Action[] GetActions()
         {
-            currentAction = actionQueue[0];
+            return actions;
+        }
+        public List<Action> GetQueuedActions()
+        {
+            return actionQueue;
+        }
+        private IEnumerator PerformQueuedActions()
+        {
+            busy = true;
             do
             {
-                yield return new WaitForSeconds(productivity);
+                currentAction = actionQueue[0];
+                do
+                {
+                    yield return new WaitForSeconds(productivity);
+
+                    if (interruptCurrentAction)
+                        break;
+
+                    if(selected)
+                        details.UpdateSecondaryGauge(++currentAction.productivitySpent, currentAction.productivityCost);
+                }
+                while (currentAction.productivitySpent < currentAction.productivityCost);
 
                 if (interruptCurrentAction)
-                    break;
+                {
+                    interruptCurrentAction = false;
+                    details.HideSecondaryGauge();
+                    continue;
+                }
+
+                //  current action is now ready to be performed!
+                actionQueue[0].whatHappens.Invoke();
+
+                //  remove it from the action queue and update the details panel
+                actionQueue.RemoveAt(0);
 
                 if(selected)
-                    details.UpdateSecondaryGauge(++currentAction.productivitySpent, currentAction.productivityCost);
+                    details.UpdateActionQueue();
             }
-            while (currentAction.productivitySpent < currentAction.productivityCost);
+            while (actionQueue.Count != 0);
+            busy = false;
+        }
 
-            if (interruptCurrentAction)
+        public override bool QueueAction(Action toQueue)
+        {
+            if (actionQueue.Count >= actionQueueLimit)
+                return false;
+
+            if (!resources.RequestResources(toQueue.cost))
             {
-                interruptCurrentAction = false;
-                details.HideSecondaryGauge();
-                continue;
+                //  insufficient funds
+                return false;
             }
+            actionQueue.Add(toQueue);
 
-            //  current action is now ready to be performed!
-            actionQueue[0].whatHappens.Invoke();
-
-            //  remove it from the action queue and update the details panel
-            actionQueue.RemoveAt(0);
+            //  if not busy, trigger action
+            if (!busy)
+                StartCoroutine(PerformQueuedActions());
 
             if(selected)
                 details.UpdateActionQueue();
+
+            return true;
         }
-        while (actionQueue.Count != 0);
-        busy = false;
-    }
 
-    public override bool QueueAction(Action toQueue)
-    {
-        if (actionQueue.Count >= actionQueueLimit)
-            return false;
-
-        if (!resources.RequestResources(toQueue.cost))
+        public void CancelQueuedAction(int index)
         {
-            //  insufficient funds
-            return false;
+            if(index == 0)
+                interruptCurrentAction = true;
+
+            resources.Refund(actionQueue[index].cost);
+            actionQueue.RemoveAt(index);
         }
-        actionQueue.Add(toQueue);
 
-        //  if not busy, trigger action
-        if (!busy)
-            StartCoroutine(PerformQueuedActions());
+        public void TrainUnit(Unit toTrain)
+        {
+            Unit trainee = Instantiate(toTrain, transform.position, Quaternion.identity, UnitManager.Instance.transform);
 
-        if(selected)
-            details.UpdateActionQueue();
-
-        return true;
-    }
-
-    public void CancelQueuedAction(int index)
-    {
-        if(index == 0)
-            interruptCurrentAction = true;
-
-        resources.Refund(actionQueue[index].cost);
-        actionQueue.RemoveAt(index);
-    }
-
-    public void TrainUnit(Unit toTrain)
-    {
-        Unit trainee = Instantiate(toTrain, transform.position, Quaternion.identity, UnitManager.Instance.transform);
-
-        //  issue a default command to the new trainee to move to a rally point
-        trainee.MoveToPosition(rallyPoint.transform.position);
-    }
+            //  issue a default command to the new trainee to move to a rally point
+            trainee.MoveToPosition(rallyPoint.transform.position);
+        }*/
 }

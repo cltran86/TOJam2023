@@ -21,6 +21,9 @@ public class Details : Singleton<Details>
                     secondaryGaugeText;
 
     [SerializeField]
+    private Button  buildButton;
+
+    [SerializeField]
     private Transform actionButtonsContentFolder;
     [SerializeField]
     private ActionButton actionButtonPrefab;
@@ -54,7 +57,7 @@ public class Details : Singleton<Details>
         //  Populate the details panel with all the info
         UpdateBasicInfo();
         UpdateActionButtons();
-        UpdateActionQueue();
+//        UpdateActionQueue();
         HideSecondaryGauge();
 
         //  Show the details panel
@@ -72,7 +75,11 @@ public class Details : Singleton<Details>
 
     public void UpdateActionButtons()
     {
-        //  Figure out what action this selectable needs buttons for...
+        Villager villager = selected.GetComponent<Villager>();
+        buildButton.gameObject.SetActive(villager && villager.CanBuild());
+
+
+/*        //  Figure out what action this selectable needs buttons for...
         Action[] actions = selected.GetActions();
 
         //  Do I already have enough action buttons?  If not make some more!
@@ -88,11 +95,11 @@ public class Details : Singleton<Details>
                 actionButtons[i].gameObject.SetActive(true);
             }
             else
-                actionButtons[i].gameObject.SetActive(false);
+                actionButtons[i].gameObject.SetActive(false);*/
     }
     public void UpdateActionQueue()
     {
-        //  Action queueing is only for buildings
+/*        //  Action queueing is only for buildings
         if (selected as Building)
         {
             //  Get a list of queued actions from the building
@@ -113,16 +120,16 @@ public class Details : Singleton<Details>
         }
         //  hide the action queue if this is not a building
         else
-            actionQueue.SetActive(false);
+            actionQueue.SetActive(false);*/
     }
 
     public void CancelQueuedAction(int queuePosition)
     {
-        if (!(selected as Building))
+/*        if (!(selected as Building))
             return;
 
         (selected as Building).CancelQueuedAction(queuePosition);
-        UpdateActionQueue();
+        UpdateActionQueue();*/
     }
 
     public void HideSecondaryGauge()
