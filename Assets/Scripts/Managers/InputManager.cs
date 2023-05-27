@@ -298,6 +298,23 @@ public class InputManager : Singleton<InputManager>
 
         if(Physics.Raycast(ray, out hit))
         {
+            //  If right clicked on terrain
+            HexTile ground = hit.transform.GetComponentInParent<HexTile>();
+
+            if (ground)
+            {
+                Unit unit = selected[0].GetComponent<Unit>();
+
+                if (unit)
+                {
+                    foreach (Selectable selected in this.selected)
+                    {
+                        unit = selected.GetComponent<Unit>();
+                        unit.MoveToPosition(hit.point);
+
+                    }
+                }
+            }
             Resource resource = hit.transform.GetComponent<Resource>();
 
             if(resource != null)
@@ -313,16 +330,6 @@ public class InputManager : Singleton<InputManager>
   //                      StartCoroutine(villager.GatherResources(resource));
 
                     //  other units should probably just move towards it?
-                }
-            }
-            Unit unit = selected[0].GetComponent<Unit>();
-
-            if(unit)
-            {
-                foreach (Selectable selected in this.selected)
-                {
-                    unit = selected.GetComponent<Unit>();
-//                    unit.MoveToPosition(hit.point);
                 }
             }
         }

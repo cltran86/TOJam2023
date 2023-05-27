@@ -407,7 +407,7 @@ GameObject:
   - component: {fileID: 1808628986}
   - component: {fileID: 3719826057281629674}
   m_Layer: 0
-  m_Name: Town Hall
+  m_Name: House
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -458,10 +458,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectedName: Town Hall
   selectedImage: {fileID: 21300000, guid: 412ea28dc96624cad9b8ad06246650e0, type: 3}
-  selectedDescription: 'This is the main building of your base.
-
-    It can produce
-    workers.'
+  selectedDescription: This building allows your village to house more villagers.
   selectionReticle: {fileID: 103220269}
   actions:
   - icon: {fileID: 21300000, guid: 8c8a73d7cb9b446e6914f8885603a91f, type: 3}
@@ -539,7 +536,7 @@ Transform:
   m_GameObject: {fileID: 7401929972426194009}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 10, y: 10, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1326428527972692102}

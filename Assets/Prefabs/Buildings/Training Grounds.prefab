@@ -144,7 +144,7 @@ GameObject:
   - component: {fileID: 1808628985}
   - component: {fileID: 5512598690980139697}
   m_Layer: 0
-  m_Name: Barracks
+  m_Name: Training Grounds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

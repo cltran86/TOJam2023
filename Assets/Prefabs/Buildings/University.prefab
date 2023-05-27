@@ -144,7 +144,7 @@ GameObject:
   - component: {fileID: 1808628985}
   - component: {fileID: 5512598690980139697}
   m_Layer: 0
-  m_Name: Archery Range
+  m_Name: University
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -192,21 +192,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 282c13261abd44b56b015a75da5559bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedName: Quarry
+  selectedName: Iron Mine
   selectedImage: {fileID: 21300000, guid: 59e76436acb514b09ac3ae8646d739dc, type: 3}
-  selectedDescription: Allows workers to extract stone from the land it is built
-    on.
+  selectedDescription: Allows workers to extract iron from the land it is built on.
   selectionReticle: {fileID: 103220269}
   actions: []
   site: {fileID: 0}
   productivity: 0
-  productivityCostToBuild: 20
+  productivityCostToBuild: 30
   productivitySpent: 0
   holdsResources: 0
   actionQueueLimit: 0
   rallyPoint: {fileID: 0}
   canBeBuiltOn: 01000000
-  cost: 0a00000000000000000000000a000000
+  cost: 0a0000000a000000000000000a000000
 --- !u!1 &7401929972426194009
 GameObject:
   m_ObjectHideFlags: 0
