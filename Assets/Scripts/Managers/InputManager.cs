@@ -139,8 +139,11 @@ public class InputManager : Singleton<InputManager>
             HexTile tile = hit.transform.GetComponentInParent<HexTile>();
             if (tile != null)
             {
-                Hover(tile);
-                return;
+                if (mode == InputMode.Build)
+                {
+                    preview.transform.position = hit.point;
+                    return;
+                }
             }
         }
     }
@@ -150,7 +153,7 @@ public class InputManager : Singleton<InputManager>
         //  if input mode is select, display a selection icon?
         //  if input mode is command, display an appropriate icon? dunno
     }
-
+    /*
     private void Hover(HexTile tile)
     {
         if (mode == InputMode.Build)
@@ -159,7 +162,7 @@ public class InputManager : Singleton<InputManager>
             //ValidatePreview(preview.canBeBuiltOn.Contains(tile.terrainType) && tile.builtHere == null && tile.resource == null);
         }
         // if input mode is command, then display a move icon?
-    }
+    }*/
 
     private void LeftClickPerformed(InputAction.CallbackContext context)
     {
