@@ -29,6 +29,9 @@ public class Details : Singleton<Details>
     private Selectable selected;
 
     [SerializeField]
+    private Sprite resourcesprite;
+
+    [SerializeField]
     private Sprite buildingSprite;
 
     [SerializeField]
@@ -71,6 +74,7 @@ public class Details : Singleton<Details>
         if(selected.GetComponent<Building>())
         {
             backingImage.sprite = buildingSprite;
+            backingImage.enabled = true;
             selectedImage.enabled = false;
         }
         else if(selected.GetComponent<Villager>())
@@ -84,11 +88,16 @@ public class Details : Singleton<Details>
             else
                 backingImage.sprite = jobSprites[9];
             selectedImage.sprite = jobSprites[(int)villager.mainJob];
+
+            backingImage.enabled = true;
+            selectedImage.enabled = true;
         }
         else if(selected.GetComponent<Resource>())
         {
-            backingImage.enabled = false;
-            selectedImage.enabled = false;
+            backingImage.sprite = buildingSprite;
+            selectedImage.sprite = resourcesprite;
+            backingImage.enabled = true;
+            selectedImage.enabled = true;
         }
     }
 
