@@ -19,7 +19,7 @@ public class CrabSpawner : MonoBehaviour
     {
         while(true)
         {
-            yield return new WaitForSeconds(1f / spawnRate);
+            yield return new WaitForSeconds(spawnRate);
             Instantiate(crab, transform);
         }
     }

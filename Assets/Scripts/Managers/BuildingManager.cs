@@ -80,4 +80,19 @@ public class BuildingManager : Singleton<BuildingManager>
         else
             print("Insufficient funds to build this building");
     }
+
+    public int HowManyBuildings()
+    {
+        return constructed.Count;
+    }
+
+    public void DestroyBuilding(Building destroyed)
+    {
+        constructed.Remove(destroyed);
+        Destroy(destroyed.gameObject);
+
+        //  if there are no more units, game over
+        if(constructed.Count == 0 && UnitManager.Instance.HowManyUnits() == 0)
+            LevelManager.Instance.GameOver();
+    }
 }

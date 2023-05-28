@@ -12,9 +12,14 @@ public class UnitManager : Singleton<UnitManager>
         units.Add(toAdd);
     }
 
-    public void RemoveUnit(Unit toRemove)
+    public void DestroyUnit(Unit toRemove)
     {
         units.Remove(toRemove);
+
+        Destroy(toRemove.gameObject);
+
+        if (units.Count == 0 && BuildingManager.Instance.HowManyBuildings() == 0)
+            LevelManager.Instance.GameOver();
     }
 
     public int HowManyUnits()

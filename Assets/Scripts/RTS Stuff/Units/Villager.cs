@@ -253,8 +253,7 @@ public class Villager : Unit
 
     protected override void Die()
     {
-        UnitManager.Instance.RemoveUnit(this);
-        base.Die();
+        UnitManager.Instance.DestroyUnit(this);
     }
 
     private void OnTriggerEnter(Collider other)

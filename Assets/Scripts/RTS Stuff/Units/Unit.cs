@@ -22,7 +22,6 @@ public class Unit : Selectable
                         targetPosition;
 
     protected float distanceMoved;
-//    protected bool moving;
 
     private IEnumerator moving;
 
@@ -61,16 +60,4 @@ public class Unit : Selectable
 
         animator.SetBool("Swimming", false);
     }
-
-    //  Not sure if I still need these
-
-/*    public override Action[] GetActions()
-    {
-        return actions;
-    }
-    public override bool QueueAction(Action toQueue)
-    {
-        toQueue.whatHappens.Invoke();
-        return true;
-    }*/
 }

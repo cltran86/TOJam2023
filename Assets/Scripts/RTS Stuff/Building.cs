@@ -93,6 +93,11 @@ public class Building : Selectable
         return base.TakeDamage(damage, whoAttackedMe);
     }
 
+    protected override void Die()
+    {
+        BuildingManager.Instance.DestroyBuilding(this);
+    }
+
     private void OnTriggerEnter(Collider collision)
     {
         if (!isPreview)
