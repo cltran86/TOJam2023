@@ -41,6 +41,12 @@ public class Villager : Unit
     protected int   gathered,
                     capacity = 10;
 
+    [SerializeField]
+    protected Sprite[] iconImages;
+
+    [SerializeField]
+    protected Sprite[] iconBackground;
+
     [Header("[0] Gather\n[1] Build\t[2] Heal\t\t[3] Art\n[4] Fight\t[5] Archery\t[6] Shield")]
     [SerializeField]
     private bool[] skills;
@@ -53,7 +59,7 @@ public class Villager : Unit
                     targetIsInRange;
 
     private float timeSinceLastAttack;
-
+    
     public IEnumerator GatherResources(Resource toGather)
     {
         if(currentOrders != null)

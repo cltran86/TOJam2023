@@ -13,7 +13,10 @@ public class Details : Singleton<Details>
     private Image   selectedImage;
 
     [SerializeField]
-    private Slider  primaryGauge,
+    private Image   backingImage;
+
+    [SerializeField]
+    private Image  primaryGauge,
                     secondaryGauge;
 
     [SerializeField]
@@ -160,7 +163,7 @@ public class Details : Singleton<Details>
             secondaryGauge.gameObject.SetActive(false);
             return;
         }
-        secondaryGauge.value = (float) currentProductivity / maxProductivity;
+        secondaryGauge.fillAmount = (float) currentProductivity / maxProductivity;
         secondaryGaugeText.text = currentProductivity + " / " + maxProductivity;
         secondaryGauge.gameObject.SetActive(true);
     }
