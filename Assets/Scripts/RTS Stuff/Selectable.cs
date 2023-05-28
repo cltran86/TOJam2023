@@ -44,6 +44,9 @@ public abstract class Selectable : MonoBehaviour
     {
         health -= damage;
 
+        if (selected)
+            details.UpdatePrimaryGauge();
+
         if (health <= 0)
         {
             Die();

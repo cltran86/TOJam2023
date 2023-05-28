@@ -28,7 +28,7 @@ public enum Jobs
 public class Villager : Unit
 {
     [SerializeField]
-    private Jobs mainJob, subJob;
+    public Jobs mainJob, subJob;
 
     [SerializeField]
     private GameObject[] jobEquipment;

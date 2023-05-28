@@ -23,20 +23,16 @@ public class Details : Singleton<Details>
     private Text    primaryGaugeText,
                     secondaryGaugeText;
 
-//    [SerializeField]
-  //  private Transform actionButtonsContentFolder;
-    //[SerializeField]
-    //private ActionButton actionButtonPrefab;
-
     [SerializeField]
     private List<Button> actionButtons;
 
-//    [SerializeField]
-  //  private GameObject actionQueue;
-    //[SerializeField]
-   // private List<ActionQueueButton> actionQueueButtons;
-
     private Selectable selected;
+
+    [SerializeField]
+    private Sprite buildingSprite;
+
+    [SerializeField]
+    private Sprite[] jobSprites;
 
     protected override void Awake()
     {
@@ -58,7 +54,7 @@ public class Details : Singleton<Details>
         //  Populate the details panel with all the info
         UpdateBasicInfo();
         UpdateActionButtons();
-//        UpdateActionQueue();
+        UpdatePrimaryGauge();
         HideSecondaryGauge();
 
         //  Show the details panel
@@ -69,9 +65,31 @@ public class Details : Singleton<Details>
     {
         selectedName.text           = selected.selectedName;
         selectedDescription.text    = selected.selectedDescription;
-        selectedImage.sprite        = selected.selectedImage;
 
-        //  set the primary gauge to be the unit or building health, or resource amount
+//        selectedImage.sprite        = selected.selectedImage;
+
+        if(selected.GetComponent<Building>())
+        {
+            backingImage.sprite = buildingSprite;
+            selectedImage.enabled = false;
+        }
+        else if(selected.GetComponent<Villager>())
+        {
+            Villager villager = selected.GetComponent<Villager>();
+
+            if (villager.mainJob == Jobs.Villager)
+                backingImage.sprite = jobSprites[7];
+            else if (villager.mainJob < Jobs.Fighter)
+                backingImage.sprite = jobSprites[8];
+            else
+                backingImage.sprite = jobSprites[9];
+            selectedImage.sprite = jobSprites[(int)villager.mainJob];
+        }
+        else if(selected.GetComponent<Resource>())
+        {
+            backingImage.enabled = false;
+            selectedImage.enabled = false;
+        }
     }
 
     public void UpdateActionButtons()
@@ -90,25 +108,6 @@ public class Details : Singleton<Details>
             foreach(Jobs option in options)
                 actionButtons[(int)option].gameObject.SetActive(true);
         }
-
-
-        /*        //  Figure out what action this selectable needs buttons for...
-                Action[] actions = selected.GetActions();
-
-                //  Do I already have enough action buttons?  If not make some more!
-                if (actions.Length > actionButtons.Count)
-                    for (int i = actionButtons.Count; i != actions.Length; ++i)
-                        actionButtons.Add(Instantiate(actionButtonPrefab, actionButtonsContentFolder));
-
-                //  iterate through action buttons and assign their functions, disable extra buttons
-                for (int i = 0; i != actionButtons.Count; ++i)
-                    if (i < actions.Length)
-                    {
-                        actionButtons[i].PopulateButton(selected, actions[i]);
-                        actionButtons[i].gameObject.SetActive(true);
-                    }
-                    else
-                        actionButtons[i].gameObject.SetActive(false);*/
     }
 
     public void TrainButtonPressed(int jobIndex)
@@ -116,39 +115,26 @@ public class Details : Singleton<Details>
         StartCoroutine(selected.GetComponent<Villager>().TrainNewJob((Jobs) jobIndex));
     }
 
+    public void UpdatePrimaryGauge()
+    {
+        if(selected.GetComponent<Resource>())
+            primaryGauge.gameObject.SetActive(false);
+        else
+        {
+            primaryGauge.fillAmount = (float) selected.health / selected.maxHealth;
+            primaryGaugeText.text = selected.health + " / " + selected.maxHealth;
+            primaryGauge.gameObject.SetActive(true);
+        }
+    }
+
     public void UpdateActionQueue()
     {
-/*        //  Action queueing is only for buildings
-        if (selected as Building)
-        {
-            //  Get a list of queued actions from the building
-            List<Action> queuedActions = (selected as Building).GetQueuedActions();
 
-            //  iterate through action queue buttons and assign their icons, disable extra buttons
-            for (int i = 0; i != actionQueueButtons.Count; ++i)
-                if (i < queuedActions.Count)
-                {
-                    actionQueueButtons[i].PopulateButton(queuedActions[i].icon);
-                    actionQueueButtons[i].gameObject.SetActive(true);
-                }
-                else
-                    actionQueueButtons[i].gameObject.SetActive(false);
-
-            //  show the action queue
-            actionQueue.SetActive(true);
-        }
-        //  hide the action queue if this is not a building
-        else
-            actionQueue.SetActive(false);*/
     }
 
     public void CancelQueuedAction(int queuePosition)
     {
-/*        if (!(selected as Building))
-            return;
 
-        (selected as Building).CancelQueuedAction(queuePosition);
-        UpdateActionQueue();*/
     }
 
     public void HideSecondaryGauge()
