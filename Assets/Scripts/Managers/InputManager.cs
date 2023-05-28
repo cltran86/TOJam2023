@@ -312,6 +312,7 @@ public class InputManager : Singleton<InputManager>
                     {
                         unit = selected.GetComponent<Unit>();
                         StartCoroutine(unit.NavigateTo(hit.point));
+                        return;
                     }
                 }
             }
@@ -329,6 +330,25 @@ public class InputManager : Singleton<InputManager>
                     if(villager)
                         StartCoroutine(villager.GatherResources(resource));
                 }
+                return;
+            }
+
+            Crab enemy = hit.transform.GetComponent<Crab>();
+
+            if(enemy)
+            {
+                print("Right clicked on an enemy");
+                //  right clicked on an enemy, check if any fighers are selected and command them to attack it
+                Villager villager;
+
+                foreach (Selectable selectable in selected)
+                {
+                    villager = selectable.GetComponent<Villager>();
+
+                    if (villager)
+                        villager.Fight(enemy);
+                }
+                return;
             }
         }
     }

@@ -611,6 +611,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 282c13261abd44b56b015a75da5559bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 100
+  maxHealth: 100
   selectedName: House
   selectedImage: {fileID: 21300000, guid: 412ea28dc96624cad9b8ad06246650e0, type: 3}
   selectedDescription: This building allows your village to house more villagers.
@@ -620,7 +622,7 @@ MonoBehaviour:
   cost: 0
   underConstruction: {fileID: 2825028490139541029}
   built: {fileID: 7401929972426194009}
-  decorated: {fileID: 0}
+  decorated: {fileID: 601357961374417203}
   damaged: {fileID: 8853423686598919640}
   skillsToTrainHere: 040000000500000006000000
 --- !u!1 &7401929972426194009

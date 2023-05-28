@@ -10,6 +10,7 @@ public abstract class Selectable : MonoBehaviour
     protected Details details;
     protected InputManager input;
 
+    public int health, maxHealth;
     public string selectedName;
     public Sprite selectedImage;
     [TextArea]
@@ -38,14 +39,21 @@ public abstract class Selectable : MonoBehaviour
         selected = select;
         selectionReticle.SetActive(select);
     }
-/*
-    public virtual bool QueueAction(Action toQueue)
+
+    public virtual bool TakeDamage(int damage, Crab whoAttackedMe)
     {
+        health -= damage;
+
+        if (health <= 0)
+        {
+            Die();
+            return true;
+        }
         return false;
     }
-*/
-    //public abstract Action[] GetActions();
 
-    //    protected abstract void GetPrimaryGaugeValue();
-    //  protected abstract void GetSecondaryGaugeValue();
+    protected virtual void Die()
+    {
+        Destroy(gameObject);
+    }
 }

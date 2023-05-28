@@ -69,7 +69,7 @@ public class BuildingManager : Singleton<BuildingManager>
     {
         constructed.Add(built);
     }
-/*
+
     public void Build(Building toBuild)
     {
         if (resources.RequestResources(toBuild.cost))
@@ -79,5 +79,5 @@ public class BuildingManager : Singleton<BuildingManager>
         }
         else
             print("Insufficient funds to build this building");
-    }*/
+    }
 }

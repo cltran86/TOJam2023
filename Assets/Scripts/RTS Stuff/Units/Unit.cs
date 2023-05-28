@@ -8,9 +8,7 @@ public class Unit : Selectable
     protected float moveSpeed = 1;
 
     [SerializeField]
-    protected int   health      = 100,
-                    maxHealth   = 100,
-                    attack      = 10,
+    protected int   attack      = 10,
                     defense     = 10;
 
     [SerializeField]

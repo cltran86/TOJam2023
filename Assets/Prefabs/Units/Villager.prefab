@@ -749,6 +749,7 @@ GameObject:
   - component: {fileID: 6929210163332938305}
   - component: {fileID: 3834346740195469835}
   - component: {fileID: 2008568118885034944}
+  - component: {fileID: 7625966940287217366}
   m_Layer: 0
   m_Name: Villager
   m_TagString: Untagged
@@ -843,6 +844,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1eaba9029a84940ea82f8402bdf2cf10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 5
+  maxHealth: 5
   selectedName: Villager
   selectedImage: {fileID: 21300000, guid: 8c8a73d7cb9b446e6914f8885603a91f, type: 3}
   selectedDescription: 'Villagers are the best suited for gathering resources.
@@ -891,16 +894,16 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-  moveSpeed: 1
-  health: 100
-  maxHealth: 100
-  attack: 10
-  defense: 10
-  buildSpeed: 1
-  influenceSpeed: 1
-  influenceRange: 1
-  attackSpeed: 1
-  attackRange: 1
+  moveSpeed: 2
+  attack: 0
+  defense: 0
+  buildSpeed: 0
+  influenceSpeed: 0
+  influenceRange: 0
+  attackSpeed: 0
+  attackRange: 0
+  mainJob: 0
+  subJob: 0
   jobEquipment:
   - {fileID: 6509152408428750211}
   - {fileID: 2065100584765072066}
@@ -909,10 +912,24 @@ MonoBehaviour:
   - {fileID: 7599087825526857139}
   - {fileID: 6347718193919297557}
   - {fileID: 1404273442287273196}
-  gatherSpeed: 1
+  gatherSpeed: 10
+  learnSpeed: 1
   gathered: 0
-  capacity: 10
-  skills: 000000000000
+  capacity: 30
+  skills: 01000000000000
+--- !u!135 &7625966940287217366
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6929210163332937151}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 2
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &7599087825526857139
 GameObject:
   m_ObjectHideFlags: 0

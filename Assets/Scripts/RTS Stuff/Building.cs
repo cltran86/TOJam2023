@@ -74,6 +74,25 @@ public class Building : Selectable
         //  etc
     }
 
+    public bool Repair()
+    {
+        if(++health >= maxHealth)
+        {
+            damaged.SetActive(false);
+            health = maxHealth;
+            return false;
+        }
+        return true;
+    }
+
+    public override bool TakeDamage(int damage, Crab whoAttackedMe)
+    {
+        if(health < maxHealth)
+            damaged.SetActive(true);
+
+        return base.TakeDamage(damage, whoAttackedMe);
+    }
+
     private void OnTriggerEnter(Collider collision)
     {
         if (!isPreview)

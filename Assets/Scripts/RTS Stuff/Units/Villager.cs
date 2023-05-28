@@ -5,6 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public enum Skills
 {
+    gather,
     build,
     heal,
     art,
@@ -40,11 +41,18 @@ public class Villager : Unit
     protected int   gathered,
                     capacity = 10;
 
-    [Header("[0] Build\t[1] Heal\t\t[2] Art\n[3] Fight\t[4] Archery\t[5] Shield")]
+    [Header("[0] Gather\n[1] Build\t[2] Heal\t\t[3] Art\n[4] Fight\t[5] Archery\t[6] Shield")]
     [SerializeField]
     private bool[] skills;
 
     private IEnumerator currentOrders;
+
+    private Crab target;
+
+    private bool    canAttack = true,
+                    targetIsInRange;
+
+    private float timeSinceLastAttack;
 
     public IEnumerator GatherResources(Resource toGather)
     {
@@ -148,7 +156,7 @@ public class Villager : Unit
 
     public bool CanBuild()
     {
-        return skills[0];
+        return skills[1];
     }
 
     public void OpenBuildMenu()
@@ -192,9 +200,9 @@ public class Villager : Unit
             return;
     }
 
-    public void Fight(Unit enemy)
+    public void Fight(Crab enemy)
     {
-        if (skills[(int)Skills.archery])
+        /*if (skills[(int)Skills.archery])
         {
 
         }
@@ -202,9 +210,71 @@ public class Villager : Unit
         {
 
         }
-        else if (skills[(int)Skills.fight])
+        else */if (skills[(int)Skills.fight])
         {
-
+            print("Commanding villager to attack");
+            StartCoroutine(Fighting(enemy));
         }
+    }
+
+    private IEnumerator Fighting(Crab enemy)
+    {
+        if (currentOrders != null)
+            StopCoroutine(currentOrders);
+        currentOrders = Fighting(enemy);
+
+        target = enemy;
+        do
+        {
+            if(!targetIsInRange)
+                transform.position = Vector3.MoveTowards(transform.position, target.transform.position, moveSpeed);
+
+            else if(canAttack && targetIsInRange)
+            {
+                target.TakeDamage(attack, this);
+                canAttack = false;
+            }
+            timeSinceLastAttack += Time.deltaTime;
+            if (timeSinceLastAttack > 1f / attackSpeed)
+                canAttack = true;
+
+            yield return null;
+        }
+        while (target != null) ;
+    }
+
+    public override bool TakeDamage(int damage, Crab whoAttackedMe)
+    {
+        if(target == null)
+            target = whoAttackedMe;
+
+        return base.TakeDamage(damage, whoAttackedMe);
+    }
+
+    protected override void Die()
+    {
+        UnitManager.Instance.RemoveUnit(this);
+        base.Die();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Crab enemy = other.GetComponent<Crab>();
+
+        if(target == null && enemy != null)
+        {
+            target = enemy;
+            targetIsInRange = true;
+        }
+        else if (target != null && enemy == target)
+            targetIsInRange = true;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        Crab enemy = other.GetComponent<Crab>();
+
+        if (enemy == target)
+            targetIsInRange = false;
     }
 }
